@@ -89,6 +89,6 @@ text = "drop and give me: \n *Upper body* \n {} ({} {}) \n *Legs* \n {} ({} {}) 
 icon_emoji = "man-cartwheeling"
 channel = "#workout"
 username = "GymBot"
-url = 'https://hooks.slack.com/services/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'
+url = #slack web hook
 
 requests.post(url, json={'text': text, 'icon_emoji': icon_emoji, 'channel': channel, 'username': username})
