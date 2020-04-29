@@ -2,6 +2,7 @@ import requests
 import random
 import hashlib
 import datetime
+import os
 
 exercises = {
     "upper": {
@@ -89,6 +90,9 @@ text = "drop and give me: \n *Upper body* \n {} ({} {}) \n *Legs* \n {} ({} {}) 
 icon_emoji = "man-cartwheeling"
 channel = "#workout"
 username = "GymBot"
-url = #slack web hook
+url = os.environ.get('SLACK_WEBHOOK_URL')
 
-requests.post(url, json={'text': text, 'icon_emoji': icon_emoji, 'channel': channel, 'username': username})
+if url == None:
+    print("You need to setup an environment variable for the SLACK_WEBHOOK_URL")
+else:
+    requests.post(url, json={'text': text, 'icon_emoji': icon_emoji, 'channel': channel, 'username': username})
