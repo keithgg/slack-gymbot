@@ -13,7 +13,7 @@ exercises = {
         "Bear Crawls": [30, "seconds"],
         "Tricep Dips": [20, "reps"],
         "Close-Grip Push Ups": [10, "reps"],
-        "Kick Throughs": [20, "reps"]
+        "Kick Throughs": [20, "reps"],
     },
     "legs": {
         "Squats": [20, "reps"],
@@ -22,7 +22,7 @@ exercises = {
         "Mountain Climbers": [30, "seconds"],
         "Squat Jumps": [20, "reps"],
         "Side Lunges": [20, "reps"],
-        "Reverse Lunges": [20, "reps"]
+        "Reverse Lunges": [20, "reps"],
     },
     "core": {
         "Sit Ups": [20, "reps"],
@@ -30,39 +30,36 @@ exercises = {
         "Side Planks": [30, "seconds"],
         "Supermans": [20, "reps"],
         "Leg Raises": [20, "reps"],
-        "Bicycle Crunches": [20, "reps"]
-    }
+        "Bicycle Crunches": [20, "reps"],
+    },
 }
 
-today_md5 = hashlib.md5(str(datetime.date.today()).encode('utf-8')).hexdigest()
+today_md5 = hashlib.md5(str(datetime.date.today()).encode("utf-8")).hexdigest()
 today_md5_str = str(int(today_md5, base=32))
-today_md5_str_mid = int(len(today_md5_str)/2)
+today_md5_str_mid = int(len(today_md5_str) / 2)
 
-class safelist(list):
-    def get(self, index, default=None):
-        try:
-            return self.__getitem__(index)
-        except IndexError:
-            return default
+upper_keys = list(exercises["upper"].keys())
+legs_keys = list(exercises["legs"].keys())
+core_keys = list(exercises["core"].keys())
 
-upper_keys = safelist(list(exercises['upper'].keys()))
-legs_keys = safelist(list(exercises['legs'].keys()))
-core_keys = safelist(list(exercises['core'].keys()))
 
 def get_key(keys, _list):
     for i in _list:
-        key = keys.get(int(i))
-        if key != None:
+        try:
+            key = keys[int(i)]
             break
+        except IndexError:
+            pass
     return key
+
 
 upper_key = get_key(upper_keys, today_md5_str[0:])
 legs_key = get_key(legs_keys, today_md5_str[::-1])
 core_key = get_key(core_keys, today_md5_str[today_md5_str_mid:])
 
-upper_val = exercises['upper'][upper_key]
-legs_val = exercises['legs'][legs_key]
-core_val = exercises['core'][core_key]
+upper_val = exercises["upper"][upper_key]
+legs_val = exercises["legs"][legs_key]
+core_val = exercises["core"][core_key]
 
 text = ""
 
@@ -81,18 +78,32 @@ elif datetime.datetime.now().hour == 17:
 else:
     text += "Just "
 
-text = "drop and give me: \n *Upper body* \n {} ({} {}) \n *Legs* \n {} ({} {}) \n *Core* \n {} ({} {}) \n".format(
-    upper_key, upper_val[0], upper_val[1],
-    legs_key, legs_val[0], legs_val[1],
-    core_key, core_val[0], core_val[1],
+text += "drop and give me: \n *Upper body* \n {} ({} {}) \n *Legs* \n {} ({} {}) \n *Core* \n {} ({} {}) \n".format(
+    upper_key,
+    upper_val[0],
+    upper_val[1],
+    legs_key,
+    legs_val[0],
+    legs_val[1],
+    core_key,
+    core_val[0],
+    core_val[1],
 )
 
 icon_emoji = "man-cartwheeling"
-channel = "#workout"
+channel = "#test"
 username = "GymBot"
-url = os.environ.get('SLACK_WEBHOOK_URL')
+url = os.environ.get("SLACK_WEBHOOK_URL")
 
 if url == None:
     print("You need to setup an environment variable for the SLACK_WEBHOOK_URL")
 else:
-    requests.post(url, json={'text': text, 'icon_emoji': icon_emoji, 'channel': channel, 'username': username})
+    requests.post(
+        url,
+        json={
+            "text": text,
+            "icon_emoji": icon_emoji,
+            "channel": channel,
+            "username": username,
+        },
+    )
