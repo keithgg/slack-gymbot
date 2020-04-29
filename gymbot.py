@@ -38,9 +38,10 @@ today_md5 = hashlib.md5(str(datetime.date.today()).encode("utf-8")).hexdigest()
 today_md5_str = str(int(today_md5, base=32))
 today_md5_str_mid = int(len(today_md5_str) / 2)
 
-upper_keys = list(exercises["upper"].keys())
-legs_keys = list(exercises["legs"].keys())
-core_keys = list(exercises["core"].keys())
+# the sort() here is for python 3.5 which doesn't order keys
+upper_keys = list(exercises["upper"].keys()).sort()
+legs_keys = list(exercises["legs"].keys()).sort()
+core_keys = list(exercises["core"].keys()).sort()
 
 
 def get_key(keys, _list):
