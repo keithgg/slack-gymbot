@@ -74,7 +74,7 @@ elif datetime.datetime.now().hour == 10:
 elif datetime.datetime.now().hour == 12:
     text += "Lunch is going to taste so much better if you "
 elif datetime.datetime.now().hour == 13:
-    text += "You should be ashamed of yourself for eating all that... \n Now "
+    text += "Belly full or barely full, it doesn't change the fact you need to "
 elif datetime.datetime.now().hour == 16:
     text += "You're almost there big boy... \n Now "
 elif datetime.datetime.now().hour == 17:
