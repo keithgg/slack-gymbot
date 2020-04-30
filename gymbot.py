@@ -94,7 +94,7 @@ text += "drop and give me: \n *Upper body* \n {} ({} {}) \n *Legs* \n {} ({} {})
     core_val[1],
 )
 
-icon_emoji = "man-cartwheeling"
+icon_emoji = "aw_yeah"
 channel = "#workout"
 username = "GymBot"
 url = os.environ.get("SLACK_WEBHOOK_URL")
