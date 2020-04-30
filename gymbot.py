@@ -39,9 +39,12 @@ today_md5_str = str(int(today_md5, base=32))
 today_md5_str_mid = int(len(today_md5_str) / 2)
 
 # the sort() here is for python 3.5 which doesn't order keys
-upper_keys = list(exercises["upper"].keys()).sort()
-legs_keys = list(exercises["legs"].keys()).sort()
-core_keys = list(exercises["core"].keys()).sort()
+upper_keys = list(exercises["upper"].keys())
+upper_keys.sort()
+legs_keys = list(exercises["legs"].keys())
+legs_keys.sort()
+core_keys = list(exercises["core"].keys())
+core_keys.sort()
 
 
 def get_key(keys, _list):
@@ -73,7 +76,7 @@ elif datetime.datetime.now().hour == 12:
 elif datetime.datetime.now().hour == 13:
     text += "You should be ashamed of yourself for eating all that... \n Now "
 elif datetime.datetime.now().hour == 16:
-    text += "You're almost there big boy... \n Now"
+    text += "You're almost there big boy... \n Now "
 elif datetime.datetime.now().hour == 17:
     text += "If you've made it this far, you might as well go all the way... "
 else:
@@ -92,7 +95,7 @@ text += "drop and give me: \n *Upper body* \n {} ({} {}) \n *Legs* \n {} ({} {})
 )
 
 icon_emoji = "man-cartwheeling"
-channel = "#test"
+channel = "#workout"
 username = "GymBot"
 url = os.environ.get("SLACK_WEBHOOK_URL")
 
