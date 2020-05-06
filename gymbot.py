@@ -13,7 +13,7 @@ exercises = {
         "Bear Crawls": [30, "seconds", "https://media.giphy.com/media/LWBkgGLVvDBJK/giphy.gif"],
         "Tricep Dips": [20, "reps", "https://media.giphy.com/media/13HOBYXe87LjvW/giphy.gif"],
         "Close-Grip Push Ups": [10, "reps", "http://www.shapefit.com/pics/chest-exercises-push-ups-close-hand-position.gif"],
-        "Kick Throughs": [20, "reps", ""],
+        "Kick Throughs": [20, "reps", "https://raw.githubusercontent.com/alecvn/slack-gymbot/master/kick_through.gif"],
     },
     "legs": {
         "Squats": [20, "reps", "https://media.giphy.com/media/1qfKN8Dt0CRdCRxz9q/giphy.gif"],
@@ -84,20 +84,8 @@ else:
 
 pretext += "drop and give me: \n "
 
-# text += "*Upper body* \n {} ({} {}) \n *Legs* \n {} ({} {}) \n *Core* \n {} ({} {}) \n".format(
-#     upper_key,
-#     upper_val[0],
-#     upper_val[1],
-#     legs_key,
-#     legs_val[0],
-#     legs_val[1],
-#     core_key,
-#     core_val[0],
-#     core_val[1],
-# )
-
 icon_emoji = "aw_yeah"
-channel = "#test"# "#workout"
+channel = "#workout"
 username = "GymBot"
 url = os.environ.get("SLACK_WEBHOOK_URL")
 
