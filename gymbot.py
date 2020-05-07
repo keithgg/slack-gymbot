@@ -67,7 +67,10 @@ core_val = exercises["core"][core_key]
 
 pretext = ""
 
-if datetime.datetime.now().hour == 8:
+start_hour = 9
+end_hour = 17
+
+if datetime.datetime.now().hour == start_hour:
     pretext += "Good morning sunshine! \n Now "
 elif datetime.datetime.now().hour == 10:
     pretext += "Just before you have that cookie... "
@@ -77,7 +80,7 @@ elif datetime.datetime.now().hour == 13:
     pretext += "Belly full or barely full, it doesn't change the fact you need to "
 elif datetime.datetime.now().hour == 16:
     pretext += "You're almost there big boy... \n Now "
-elif datetime.datetime.now().hour == 17:
+elif datetime.datetime.now().hour == end_hour:
     pretext += "If you've made it this far, you might as well go all the way... "
 else:
     pretext += "Just "
@@ -106,7 +109,7 @@ else:
                     "fallback": "", # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
                     "pretext": "", # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
                     "color":"#FAA71A",
-                    "image_url": upper_val[2] if datetime.datetime.now().hour == 8 else "",
+                    "image_url": upper_val[2] if datetime.datetime.now().hour == start_hour else "",
                     "fields": [
                         {
                             "title": "Upper body",
@@ -119,7 +122,7 @@ else:
                     "fallback": "", # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
                     "pretext": "", # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
                     "color":"#FAA71A",
-                    "image_url": legs_val[2] if datetime.datetime.now().hour == 8 else "",
+                    "image_url": legs_val[2] if datetime.datetime.now().hour == start_hour else "",
                     "fields": [
                         {
                             "title": "Legs",
@@ -132,7 +135,7 @@ else:
                     "fallback": "", # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
                     "pretext": "", # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
                     "color":"#FAA71A",
-                    "image_url": core_val[2] if datetime.datetime.now().hour == 8 else "",
+                    "image_url": core_val[2] if datetime.datetime.now().hour == start_hour else "",
                     "fields": [
                         {
                             "title": "Core",
