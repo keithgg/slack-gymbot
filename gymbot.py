@@ -106,12 +106,11 @@ else:
                     "fallback": "", # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
                     "pretext": "", # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
                     "color":"#FAA71A",
-                    "image_url": upper_val[2],
+                    "image_url": upper_val[2] if datetime.datetime.now().hour == 8 else "",
                     "fields": [
                         {
                             "title": "Upper body",
                             "value": "{} ({} {})".format(upper_key, upper_val[0], upper_val[1]),
-                            "image_url": upper_val[2],
                             "short": False
                         }
                     ]
@@ -120,12 +119,11 @@ else:
                     "fallback": "", # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
                     "pretext": "", # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
                     "color":"#FAA71A",
-                    "image_url": legs_val[2],
+                    "image_url": legs_val[2] if datetime.datetime.now().hour == 8 else "",
                     "fields": [
                         {
                             "title": "Legs",
                             "value": "{} ({} {})".format(legs_key, legs_val[0], legs_val[1]),
-                            "image_url": legs_val[2],
                             "short": False
                         }
                     ]
@@ -134,12 +132,11 @@ else:
                     "fallback": "", # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
                     "pretext": "", # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
                     "color":"#FAA71A",
-                    "image_url": core_val[2],
+                    "image_url": core_val[2] if datetime.datetime.now().hour == 8 else "",
                     "fields": [
                         {
                             "title": "Core",
                             "value": "{} ({} {})".format(core_key, core_val[0], core_val[1]),
-                            "image_url": core_val[2],
                             "short": False
                         }
                     ]
