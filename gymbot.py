@@ -96,8 +96,8 @@ else:
         url,
         json={
             'text': pretext,
-            'unfurl_links': True,
-            "unfurl_media": True,
+            'unfurl_links': False,
+            "unfurl_media": False,
             'icon_emoji': icon_emoji,
             'channel': channel,
             'username': username,
