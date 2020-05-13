@@ -57,7 +57,7 @@ def get_key(keys, _list):
     return key
 
 
-upper_key = get_key(upper_keys, today_md5_str[0:])
+upper_key = get_key(upper_keys, today_md5_str[1:])
 legs_key = get_key(legs_keys, today_md5_str[::-1])
 core_key = get_key(core_keys, today_md5_str[today_md5_str_mid:])
 
@@ -99,8 +99,7 @@ else:
         url,
         json={
             'text': pretext,
-            'unfurl_links': False,
-            "unfurl_media": False,
+            'unfurl_links': "false",
             'icon_emoji': icon_emoji,
             'channel': channel,
             'username': username,
