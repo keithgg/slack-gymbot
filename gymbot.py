@@ -5,6 +5,11 @@ import datetime
 import os
 import collections
 
+WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
+
+if not WEBHOOK_URL:
+    raise ValueError("Add the SLACK_WEBHOOK_URL environment var plox")
+
 seed = str(datetime.date.today())
 random.seed(seed)
 
@@ -75,7 +80,6 @@ pretext = f"{start_pretext} drop and give me: \n "
 icon_emoji = "aw_yeah"
 channel = "#gymbot"
 username = "GymBot"
-url = os.environ.get("SLACK_WEBHOOK_URL")
 
 
 def get_exercise_json(title, group):
@@ -97,7 +101,7 @@ def get_exercise_json(title, group):
 
 
 requests.post(
-    url,
+    WEBHOOK_URL,
     json={
         "text": pretext,
         "unfurl_links": "false",
