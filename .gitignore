@@ -1,1 +1,4 @@
 *~
+function.zip
+*.pyc
+v-env

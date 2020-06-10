@@ -4,18 +4,32 @@ import hashlib
 import datetime
 import os
 import collections
+import pytz
 
+timezone = pytz.timezone("Africa/Johannesburg")
+Exercise = collections.namedtuple("Exercise", ["name", "num_reps", "rep_quantity", "image_url"])
 WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
 
-if not WEBHOOK_URL:
-    raise ValueError("Add the SLACK_WEBHOOK_URL environment var plox")
 
-seed = str(datetime.date.today())
-random.seed(seed)
+def get_exercise_json(title, group, attach_images):
+    chosen = random.choice(group)
 
-Exercise = collections.namedtuple("Exercise", ["name", "num_reps", "rep_quantity", "image_url"])
+    return {
+        "fallback": "",  # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
+        "pretext": "",  # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
+        "color": "#FAA71A",
+        "image_url": chosen.image_url if attach_images else "",
+        "fields": [
+            {
+                "title": title,
+                "value": "{} ({} {})".format(chosen.name, chosen.num_reps, chosen.rep_quantity),
+                "short": False,
+            }
+        ],
+    }
 
-exercises = {
+
+EXERCISES = {
     "upper": [
         Exercise("Push Ups", 20, "reps", "https://media.giphy.com/media/Kjj5yTgDdiuvC/giphy.gif"),
         Exercise("Burpees", 20, "reps", "https://media.giphy.com/media/23hPPMRgPxbNBlPQe3/giphy.gif"),
@@ -61,57 +75,53 @@ exercises = {
 }
 
 
-start_hour = 9
-end_hour = 17
-current_hour = datetime.datetime.now().hour
+def send_exercise_message():
+    if not WEBHOOK_URL:
+        raise ValueError("Add the SLACK_WEBHOOK_URL environment var plox")
 
-pretexts = {
-    start_hour: "Good morning sunshine! \n Now ",
-    10: "Just before you have that cookie... ",
-    12: "Lunch is going to taste so much better if you ",
-    13: "Belly full or barely full, it doesn't change the fact you need to ",
-    16: "You're almost there big boy... \n Now ",
-    end_hour: "If you've made it this far, you might as well go all the way... ",
-}
+    now = datetime.datetime.now(tz=timezone)
 
-start_pretext = pretexts.get(current_hour, "Just ")
-pretext = f"{start_pretext} drop and give me: \n "
+    today = now.date()
+    seed = hashlib.md5(str(today).encode("utf8"))
+    random.seed(seed)
 
-icon_emoji = "aw_yeah"
-channel = "#gymbot"
-username = "GymBot"
+    start_hour = 9
+    end_hour = 17
+    current_hour = now.hour
+    attach_images = current_hour == start_hour
 
-
-def get_exercise_json(title, group):
-    chosen = random.choice(group)
-
-    return {
-        "fallback": "",  # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
-        "pretext": "",  # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
-        "color": "#FAA71A",
-        "image_url": chosen.image_url if current_hour == start_hour else "",
-        "fields": [
-            {
-                "title": title,
-                "value": "{} ({} {})".format(chosen.name, chosen.num_reps, chosen.rep_quantity),
-                "short": False,
-            }
-        ],
+    pretexts = {
+        start_hour: "Good morning sunshine! \n Now ",
+        10: "Just before you have that cookie... ",
+        12: "Lunch is going to taste so much better if you ",
+        13: "Belly full or barely full, it doesn't change the fact you need to ",
+        16: "You're almost there big boy... \n Now ",
+        end_hour: "If you've made it this far, you might as well go all the way... ",
     }
 
+    start_pretext = pretexts.get(current_hour, "Just ")
+    pretext = f"{start_pretext} drop and give me: \n "
 
-requests.post(
-    WEBHOOK_URL,
-    json={
-        "text": pretext,
-        "unfurl_links": "false",
-        "icon_emoji": icon_emoji,
-        "channel": channel,
-        "username": username,
-        "attachments": [
-            get_exercise_json("Upper Body", exercises["upper"]),
-            get_exercise_json("Legs", exercises["legs"]),
-            get_exercise_json("Core", exercises["core"]),
-        ],
-    },
-)
+    icon_emoji = "aw_yeah"
+    channel = "#gymbot"
+    username = "GymBot"
+
+    requests.post(
+        WEBHOOK_URL,
+        json={
+            "text": pretext,
+            "unfurl_links": "false",
+            "icon_emoji": icon_emoji,
+            "channel": channel,
+            "username": username,
+            "attachments": [
+                get_exercise_json("Upper Body", EXERCISES["upper"], attach_images),
+                get_exercise_json("Legs", EXERCISES["legs"], attach_images),
+                get_exercise_json("Core", EXERCISES["core"], attach_images),
+            ],
+        },
+    )
+
+
+if __name__ == "__main__":
+    send_exercise_message()
