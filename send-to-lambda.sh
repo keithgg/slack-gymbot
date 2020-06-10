@@ -9,8 +9,12 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
   SOURCE="$(readlink "$SOURCE")"
   [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
 done
+if [ -z "$1" ]
+then
+      echo "Please add the lambda function name as the first argument."
+fi
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
-
+LAMBDA_FUNCTION_NAME=$1
 
 cd $DIR/
 [ ! -e function.zip ] || rm function.zip
@@ -18,5 +22,5 @@ zip function.zip -r9 lambda_function.py gymbot.py
 cd v-env/lib/python3.8/site-packages/
 zip -r9 ${OLDPWD}/function.zip .
 cd $DIR
-aws lambda update-function-code --function-name slack-gymbot --zip-file fileb://function.zip
+aws lambda update-function-code --function-name ${LAMBDA_FUNCTION_NAME} --zip-file fileb://function.zip
 
