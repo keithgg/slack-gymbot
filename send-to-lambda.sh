@@ -18,8 +18,8 @@ LAMBDA_FUNCTION_NAME=$1
 
 cd $DIR/
 [ ! -e function.zip ] || rm function.zip
-zip function.zip -r9 lambda_function.py gymbot.py
+zip function.zip -q -r9 lambda_function.py gymbot.py
 cd v-env/lib/python3.8/site-packages/
-zip -r9 ${OLDPWD}/function.zip .
+zip -q -r9 ${OLDPWD}/function.zip .
 cd $DIR
-aws lambda update-function-code --function-name ${LAMBDA_FUNCTION_NAME} --zip-file fileb://function.zip
+exec aws lambda update-function-code --function-name ${LAMBDA_FUNCTION_NAME} --zip-file fileb://function.zip

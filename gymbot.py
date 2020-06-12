@@ -10,6 +10,8 @@ import json
 timezone = pytz.timezone("Africa/Johannesburg")
 Exercise = collections.namedtuple("Exercise", ["name", "num_reps", "rep_quantity", "image_url"])
 WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
+CHANNEL_NAME = os.environ.get("CHANNEL_NAME", "gymbot")
+USERNAME = os.environ.get("USERNAME", "Gymbot")
 
 
 def get_message(exercise):
@@ -111,17 +113,14 @@ def send_exercise_message():
     start_pretext = pretexts.get(current_hour, "Just")
     pretext = f"{start_pretext} drop and give me: \n "
 
-    channel = "#gymbot"
-    username = "GymBot"
-
     if current_hour == start_hour:
         get_block = get_image_json
     else:
         get_block = get_text_json
 
     json_request = {
-        "channel": channel,
-        "username": username,
+        "channel": CHANNEL_NAME,
+        "username": USERNAME,
         "blocks": [
             {"type": "section", "text": {"type": "mrkdwn", "text": pretext}},
             get_block("Upper Body", EXERCISES["upper"], attach_images),
