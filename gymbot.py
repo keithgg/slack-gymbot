@@ -5,28 +5,37 @@ import datetime
 import os
 import collections
 import pytz
+import json
 
 timezone = pytz.timezone("Africa/Johannesburg")
 Exercise = collections.namedtuple("Exercise", ["name", "num_reps", "rep_quantity", "image_url"])
 WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
 
 
-def get_exercise_json(title, group, attach_images):
+def get_message(exercise):
+    if exercise.rep_quantity == "reps":
+        return f"{exercise.num_reps} {exercise.name}"
+    else:
+        return f"{exercise.num_reps} {exercise.rep_quantity} of {exercise.name}"
+
+
+def get_image_json(title, group, attach_images):
     chosen = random.choice(group)
+    text = get_message(chosen)
 
     return {
-        "fallback": "",  # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
-        "pretext": "",  # "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
-        "color": "#FAA71A",
-        "image_url": chosen.image_url if attach_images else "",
-        "fields": [
-            {
-                "title": title,
-                "value": "{} ({} {})".format(chosen.name, chosen.num_reps, chosen.rep_quantity),
-                "short": False,
-            }
-        ],
+        "type": "image",
+        "image_url": chosen.image_url,
+        "alt_text": f"{title}: {text}",
+        "title": {"type": "plain_text", "text": f"{title}: {text}"},
     }
+
+
+def get_text_json(title, group, attach_images):
+    chosen = random.choice(group)
+    text = get_message(chosen)
+
+    return {"type": "section", "text": {"type": "mrkdwn", "text": text}}
 
 
 EXERCISES = {
@@ -82,8 +91,7 @@ def send_exercise_message():
     now = datetime.datetime.now(tz=timezone)
 
     today = now.date()
-    seed = hashlib.md5(str(today).encode("utf8"))
-    random.seed(seed)
+    random.seed(str(today))
 
     start_hour = 9
     end_hour = 17
@@ -91,37 +99,39 @@ def send_exercise_message():
     attach_images = current_hour == start_hour
 
     pretexts = {
-        start_hour: "Good morning sunshine! \n Now ",
-        10: "Just before you have that cookie... ",
-        12: "Lunch is going to taste so much better if you ",
-        13: "Belly full or barely full, it doesn't change the fact you need to ",
-        16: "You're almost there big boy... \n Now ",
-        end_hour: "If you've made it this far, you might as well go all the way... ",
+        start_hour: "*Good morning sunshine! *\n Now",
+        10: "*Just before you have that cookie...*",
+        12: "*Lunch is going to taste so much better if you *",
+        13: "*Belly full or barely full, it doesn't change the fact you need to *",
+        16: "*You're almost there big boy... *\n Now",
+        end_hour: "*If you've made it this far, you might as well go all the way...*",
     }
 
-    start_pretext = pretexts.get(current_hour, "Just ")
+    current_hour = start_hour
+    start_pretext = pretexts.get(current_hour, "Just")
     pretext = f"{start_pretext} drop and give me: \n "
 
-    icon_emoji = "aw_yeah"
     channel = "#gymbot"
     username = "GymBot"
 
-    requests.post(
-        WEBHOOK_URL,
-        json={
-            "text": pretext,
-            "unfurl_links": "false",
-            "icon_emoji": icon_emoji,
-            "channel": channel,
-            "username": username,
-            "attachments": [
-                get_exercise_json("Upper Body", EXERCISES["upper"], attach_images),
-                get_exercise_json("Legs", EXERCISES["legs"], attach_images),
-                get_exercise_json("Core", EXERCISES["core"], attach_images),
-            ],
-        },
-    )
+    if current_hour == start_hour:
+        get_block = get_image_json
+    else:
+        get_block = get_text_json
+
+    json_request = {
+        "channel": channel,
+        "username": username,
+        "blocks": [
+            {"type": "section", "text": {"type": "mrkdwn", "text": pretext}},
+            get_block("Upper Body", EXERCISES["upper"], attach_images),
+            get_block("Core", EXERCISES["core"], attach_images),
+            get_block("Legs", EXERCISES["legs"], attach_images),
+        ],
+    }
+
+    return requests.post(WEBHOOK_URL, json=json_request)
 
 
 if __name__ == "__main__":
-    send_exercise_message()
+    print(send_exercise_message().content)

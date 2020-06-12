@@ -23,4 +23,3 @@ cd v-env/lib/python3.8/site-packages/
 zip -r9 ${OLDPWD}/function.zip .
 cd $DIR
 aws lambda update-function-code --function-name ${LAMBDA_FUNCTION_NAME} --zip-file fileb://function.zip
-
