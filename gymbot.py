@@ -109,7 +109,6 @@ def send_exercise_message():
         end_hour: "*If you've made it this far, you might as well go all the way...*",
     }
 
-    current_hour = start_hour
     start_pretext = pretexts.get(current_hour, "Just")
     pretext = f"{start_pretext} drop and give me: \n "
 
